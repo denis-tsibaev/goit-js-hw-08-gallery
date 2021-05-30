@@ -1,84 +1,71 @@
- "use strict";
+'use strict';
 
-import gallery from "./gallery-items.js";
+import gallery from './gallery-items.js';
 
-const container = document.querySelector(".js-gallery");
-const jsLightbox = document.querySelector(".js-lightbox");
-const grayBackGround = document.querySelector(".lightbox__content");
-const originalImage = document.querySelector(".lightbox__image");
-const button = document.querySelector(".lightbox__button");
+const container = document.querySelector('.js-gallery');
+const jsLightbox = document.querySelector('.js-lightbox');
+const imageEl = document.querySelector('.lightbox__image');
+const button = document.querySelector('.lightbox__button');
+const divBackGround = document.querySelector('.lightbox__content');
 
+const cardsMarkup = createGallery(gallery);
 
-// function createGalery(images) {
-//   const imageGallery = images.reduce(
-//     (item, img) =>
-//       item +
-//       `<li class="gallery__item">
-//     <a class="gallery__link" href="#">
-//       <img class="gallery__image" 
-//       src = '${img.preview}'
-//       data-source = '${img.original}'
-//       alt = '${img.description}'/>
-//     </a>
-//     </li>`,
-//     ""
-//   );
-//   return container.insertAdjacentHTML("afterbegin", imageGallery);
-// }
+container.insertAdjacentHTML('beforeend', cardsMarkup);
 
-function createGalery(images) {
-	return images.map(({preview, original}) => {
-	 	return
-		`<li class="gallery__item">
-	  <a class="gallery__link" href="#">
-		<img class="gallery__image" 
-		src = '${img.preview}'
-		data-source = '${img.original}'
-		alt = '${img.description}'/>
-	  </a>
-	  </li>`,
-	  ""
-	}));
+function createGallery(images) {
+    return images
+        .map(({ preview, original, description }) => {
+            return `
+		<li class="gallery__item">
+		<a class="gallery__link" href="${original}"
+		>
+ 	     <img
+		   class="gallery__image" 
+        src = "${preview}"
+        data-source = "${original}"
+        alt = "${description}"
+		/>   
+		</a>
+        </li>
+		`;
+        })
+        .join('');
 }
 
-container.insertAdjacentHTML("afterbegin", imageGallery);
-createGalery(gallery);
+container.addEventListener('click', onImageClick);
 
-container.addEventListener("click", onClick);
-
-function onClick(event) {
-  let checkClick = event.target;
-  if (checkClick.classList.contains("gallery__image")) {
-    jsLightbox.classList.add("is-open");
-    originalImage.setAttribute("src", checkClick.dataset.source);
-    button.addEventListener("click", onClickBtn);
-    grayBackGround.addEventListener("click", closeModalClickBackGrount);
-    window.addEventListener("keydown", funcPressEsc);
-  }
+function onImageClick(event) {
+    let checkOnClick = event.target;
+    if (checkOnClick.classList.contains('gallery__image')) {
+        jsLightbox.classList.add('is-open');
+        imageEl.setAttribute('src', checkOnClick.dataset.source);
+        button.addEventListener('click', onBtnClick);
+        divBackGround.addEventListener('click', closeModalClickBackGround);
+        window.addEventListener('keydown', funcPressEsc);
+    }
 }
 
-function onClickBtn(event) {
-  let checkBtn = event.target;
-  if (!checkBtn.classList.contains("lightbox__image")) {
-    jsLightbox.classList.remove("is-open");
-    originalImage.removeAttribute("src");
-    button.removeEventListener("click", onClickBtn);
-    grayBackGround.removeEventListener("click", closeModalClickBackGround);
-    window.removeEventListener("keydown", funcPressEsc);
-  }
+function onBtnClick(event) {
+    let checkOnBtn = event.target;
+    if (!checkOnBtn.classList.contains('lightbox__image')) {
+        jsLightbox.classList.remove('is-open');
+        imageEl.removeAttribute('src');
+        button.removeEventListener('click', onBtnClick);
+        divBackGround.removeEventListener('click', closeModalClickBackGround);
+        window.removeEventListener('keydown', funcPressEsc);
+    }
 }
 
 function closeModalClickBackGround(event) {
-  if (event.target === event.currentTarget) {
-    jsLightbox.classList.remove("is-open");
-    originalImage.removeAttribute("src");
-  }
+    if (event.target === event.current.target) {
+        jsLightbox.classList.remove('is-open');
+        imageEl.removeAttribute('src');
+    }
 }
 
 function funcPressEsc(event) {
-	// event.keyCode === 27 escape button
-  if (event.keyCode === 27) {
-    jsLightbox.classList.remove("is-open");
-    originalImage.removeAttribute("src");
-  }
+    if (event.keyCode === 27) {
+        jsLightbox.classList.remove('is-open');
+        imageEl.removeAttribute('src');
+    }
 }
