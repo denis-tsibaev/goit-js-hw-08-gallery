@@ -1,12 +1,9 @@
-'use strict';
-
 import gallery from './gallery-items.js';
 
 const container = document.querySelector('.js-gallery');
 const jsLightbox = document.querySelector('.js-lightbox');
 const imageEl = document.querySelector('.lightbox__image');
 const button = document.querySelector('.lightbox__button');
-const divBackGround = document.querySelector('.lightbox__content');
 
 const cardsMarkup = createGallery(gallery);
 
@@ -17,10 +14,8 @@ function createGallery(images) {
         .map(({ preview, original, description }) => {
             return `
 		<li class="gallery__item">
-		<a class="gallery__link" href="${original}"
-		>
- 	     <img
-		   class="gallery__image" 
+		<a class="gallery__link" href="#">
+ 	    <img class="gallery__image" 
         src = "${preview}"
         data-source = "${original}"
         alt = "${description}"
@@ -32,40 +27,40 @@ function createGallery(images) {
         .join('');
 }
 
-container.addEventListener('click', onImageClick);
+container.addEventListener('click', openLightboxOnImageClick);
 
-function onImageClick(event) {
-    let checkOnClick = event.target;
-    if (checkOnClick.classList.contains('gallery__image')) {
-        jsLightbox.classList.add('is-open');
-        imageEl.setAttribute('src', checkOnClick.dataset.source);
-        button.addEventListener('click', onBtnClick);
-        divBackGround.addEventListener('click', closeModalClickBackGround);
-        window.addEventListener('keydown', funcPressEsc);
-    }
+function openLightboxOnImageClick(event) {
+    const checkOnImageClick = event.target.classList.contains('gallery__image');
+    if (!checkOnImageClick) return;
+
+    jsLightbox.classList.add('is-open');
+	imageEl.setAttribute("src", event.target.dataset.source);
+	imageEl.setAttribute("alt", event.target.alt);
+	// Нагляднее
+    // imageEl.src = event.target.dataset.source;
+    // imageEl.alt = event.target.alt;
+
+    button.addEventListener('click', onBtnClick);
+    window.addEventListener('keydown', CloseByEscBtn);
 }
 
 function onBtnClick(event) {
-    let checkOnBtn = event.target;
-    if (!checkOnBtn.classList.contains('lightbox__image')) {
-        jsLightbox.classList.remove('is-open');
-        imageEl.removeAttribute('src');
-        button.removeEventListener('click', onBtnClick);
-        divBackGround.removeEventListener('click', closeModalClickBackGround);
-        window.removeEventListener('keydown', funcPressEsc);
-    }
+    const checkOnBtn = event.target.classList.contains('lightbox__button');
+    if (!checkOnBtn) return;
+
+    jsLightbox.classList.remove('is-open');
+    imageEl.removeAttribute('src');
+	imageEl.removeAttribute('alt');
+
+    button.removeEventListener('click', onBtnClick);
+    window.removeEventListener('keydown', CloseByEscBtn);
 }
 
-function closeModalClickBackGround(event) {
-    if (event.target === event.current.target) {
+function CloseByEscBtn(event) {
+	// можно использовать keyCode===27 это тоже Escape
+    if (event.key === 'Escape') {
         jsLightbox.classList.remove('is-open');
         imageEl.removeAttribute('src');
-    }
-}
-
-function funcPressEsc(event) {
-    if (event.keyCode === 27) {
-        jsLightbox.classList.remove('is-open');
-        imageEl.removeAttribute('src');
+        imageEl.removeAttribute('alt');
     }
 }
