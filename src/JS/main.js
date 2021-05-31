@@ -34,33 +34,33 @@ function openLightboxOnImageClick(event) {
     if (!checkOnImageClick) return;
 
     jsLightbox.classList.add('is-open');
-	imageEl.setAttribute("src", event.target.dataset.source);
-	imageEl.setAttribute("alt", event.target.alt);
-	// Нагляднее
+    imageEl.setAttribute('src', event.target.dataset.source);
+    imageEl.setAttribute('alt', event.target.alt);
+    // Нагляднее
     // imageEl.src = event.target.dataset.source;
     // imageEl.alt = event.target.alt;
 
     button.addEventListener('click', onBtnClick);
-    window.addEventListener('keydown', CloseByEscBtn);
+    window.addEventListener('keydown', closeByEscBtn);
 }
 
 function onBtnClick(event) {
-    const checkOnBtn = event.target.classList.contains('lightbox__button');
-    if (!checkOnBtn) return;
-
-    jsLightbox.classList.remove('is-open');
-    imageEl.removeAttribute('src');
-	imageEl.removeAttribute('alt');
+	modalRemover()    
 
     button.removeEventListener('click', onBtnClick);
-    window.removeEventListener('keydown', CloseByEscBtn);
+    window.removeEventListener('keydown', closeByEscBtn);
 }
 
-function CloseByEscBtn(event) {
-	// можно использовать keyCode===27 это тоже Escape
+function closeByEscBtn(event) {
+    // можно использовать keyCode===27 это тоже Escape
     if (event.key === 'Escape') {
-        jsLightbox.classList.remove('is-open');
-        imageEl.removeAttribute('src');
-        imageEl.removeAttribute('alt');
+        
+		modalRemover()       
     }
+}
+
+function modalRemover() {
+	jsLightbox.classList.remove('is-open');
+    imageEl.removeAttribute('src');
+    imageEl.removeAttribute('alt');
 }
