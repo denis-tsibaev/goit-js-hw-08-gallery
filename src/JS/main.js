@@ -40,19 +40,19 @@ function openLightboxOnImageClick(event) {
     // imageEl.src = event.target.dataset.source;
     // imageEl.alt = event.target.alt;
 
-    button.addEventListener('click', modalRemover);	
+    button.addEventListener('click', modalRemover);
     window.addEventListener('keydown', closeByEscBtn);
 }
 
 function closeByEscBtn(event) {
     // можно использовать keyCode===27 это тоже Escape
-    if (event.key === 'Escape') {        
-		modalRemover()       
+    if (event.key === 'Escape') {
+        modalRemover();
     }
 }
 
 function modalRemover() {
-	jsLightbox.classList.remove('is-open');
+    jsLightbox.classList.remove('is-open');
     imageEl.removeAttribute('src');
     imageEl.removeAttribute('alt');
     window.removeEventListener('keydown', closeByEscBtn);
