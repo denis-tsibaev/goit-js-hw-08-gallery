@@ -55,5 +55,6 @@ function modalRemover() {
     jsLightbox.classList.remove('is-open');
     imageEl.removeAttribute('src');
     imageEl.removeAttribute('alt');
+    button.removeEventListener('click', modalRemover);
     window.removeEventListener('keydown', closeByEscBtn);
 }
